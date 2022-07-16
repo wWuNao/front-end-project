@@ -13,14 +13,16 @@
 
             </div>
             <!-- 登录表单区域 -->
-            <el-form class="login-form" v-if="chooseNum === 1 && tabNum === 1" :rules="loginFormRules" :model="login_Form" ref="loginFormRef">
+            <el-form class="login-form" v-if="chooseNum === 1 && tabNum === 1" :rules="loginFormRules"
+                :model="login_Form" ref="loginFormRef">
                 <!-- 手机号 -->
                 <el-form-item prop="loginPhone">
                     <el-input placeholder="请输入手机号" class="user_input" v-model="login_Form.loginPhone"></el-input>
                 </el-form-item>
                 <!-- 密码 -->
                 <el-form-item prop="loginPwd">
-                    <el-input placeholder="请输入密码,初始密码:123456" class="user_input" v-model="login_Form.loginPwd"></el-input>
+                    <el-input placeholder="请输入密码,初始密码:123456" class="user_input" v-model="login_Form.loginPwd">
+                    </el-input>
                 </el-form-item>
                 <!-- 验证码 -->
                 <el-form-item>
@@ -102,10 +104,10 @@ export default {
                 verificationCode: "",//验证码
                 verificationCodeImgSrc: "",//验证码图片地址
                 QrcodeImgsrc: "",//二维码图片地址
-                loginPhone: "",
-                loginPwd: "",
+                loginPhone: "18072210399",
+                loginPwd: "123456",
             },
-             loginFormRules: {
+            loginFormRules: {
                 loginPhone: [
                     { required: true, message: '请输入手机号', trigger: 'blur' },
                     { max: 11, message: '手机号长度不大于11位', trigger: 'blur' }
@@ -120,7 +122,145 @@ export default {
                 seconderpwd: "",//第二次输入密码
                 users_pwdVerificationCode: ''//用户输入忘记密码验证码
             },
-           
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // 请将真数据放在此线之上，不然最后被删除请不要怪在下
+            // 假数据
+            loginInFo: {
+                "code": "10000",
+                "msg": "success",
+                "data": {
+                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbmQiOiJCIiwiZXhwIjoxNjU4NTcxODgzLCJ1c2VyaWQiOiIzNDYzNzU1OTYwMDkzMjQ1NDQifQ.DlhRs7EtkplpitUyouHu0GyVmQiwcivVkEgfH1CAHdw",
+                    "info": {
+                        "realName": "SuperAdmin",
+                        "roles": [
+                            {
+                                "id": "346375595392761856",
+                                "roleName": "超级管理员"
+                            },
+                            {
+                                "id": "346375595392761856",
+                                "roleName": "超级管理员"
+                            },
+                            {
+                                "id": "346375595392761856",
+                                "roleName": "超级管理员"
+                            }
+                        ],
+                        "end": "B",
+                        "userName": "root"
+                    },
+                    "route": [
+                        {
+                            "id": "1",
+                            "menuName": "主页",
+                            "iconUrl": "home",
+                            "parentMenuId": "0",
+                            "linkUrl": "/home"
+                        },
+                        {
+                            "id": "2",
+                            "menuName": "个人中心",
+                            "iconUrl": "my",
+                            "parentMenuId": "0",
+                            "linkUrl": "/my"
+                        },
+                        {
+                            "id": "4",
+                            "menuName": "题库管理",
+                            "iconUrl": "lib_manage",
+                            "parentMenuId": "0",
+                            "linkUrl": "/lib_manage"
+                        },
+                        {
+                            "id": "5",
+
+                            "menuName": "任务管理",
+
+                            "iconUrl": "mission_manage",
+
+                            "parentMenuId": "0",
+
+                            "linkUrl": "/mission_manage"
+
+                        },
+
+                        {
+
+                            "id": "6",
+
+                            "menuName": "学生组管理",
+
+                            "iconUrl": "stu_grp_manage",
+
+                            "parentMenuId": "0",
+
+                            "linkUrl": "/stu_grp_manage"
+
+                        },
+
+                        {
+
+                            "id": "7",
+
+                            "menuName": "教师组管理",
+
+                            "iconUrl": "tch_grp_manage",
+
+                            "parentMenuId": "0",
+
+                            "linkUrl": "/tch_grp_manage"
+
+                        },
+
+                        {
+
+                            "id": "8",
+
+                            "menuName": "班级管理",
+
+                            "iconUrl": "class_manage",
+
+                            "parentMenuId": "0",
+
+                            "linkUrl": "/class_manage"
+
+                        },
+
+                        {
+
+                            "id": "9",
+
+                            "menuName": "用户管理",
+
+                            "iconUrl": "user_manage",
+
+                            "parentMenuId": "0",
+
+                            "linkUrl": "/user_manage"
+
+                        },
+
+                        {
+
+                            "id": "10",
+
+                            "menuName": "角色管理",
+
+                            "iconUrl": "role_manage",
+
+                            "parentMenuId": "0",
+
+                            "linkUrl": "/role_manage"
+
+                        }
+
+                    ]
+
+                }
+
+            }
 
         }
 
@@ -145,26 +285,30 @@ export default {
         // 获取二维码
         change_Qr_Code() {
             this.$http.get("https://www.mxnzp.com/api/qrcode/create/single?content=你好&size=500&type=0&app_id=unelukhohlqjrrip&app_secret=WmdRVmtJVDRXZ1EweFJ3bENOS1Qrdz09").then(res => {
-                console.log(res);
                 this.login_Form.QrcodeImgsrc = res.data.data.qrCodeUrl;
             });
         },
-        // 判断验证码
-        JudgmentVerificationCode() {
-            console.log(this.login_Form.users_verificationCode)
-            console.log(this.login_Form.verificationCode)
-            if (this.login_Form.users_verificationCode.toUpperCase == this.login_Form.verificationCode.toUpperCase) {
-                // this.$http.post()
-                if(this.login_Form.loginPhone=="18072210399"){
-                    window.sessionStorage.setItem('token',this.login_Form.loginPhone)
-                    this.$router.push("/home")
-                    this.$message.success('登录成功');
-                }
-            }
-            else {
-                this.change_Verification_Code();
-                return this.$message.error('验证码不正确');
-            }
+        // 判断登录验证码和登录请求发起
+        async JudgmentVerificationCode() {
+            // if (this.login_Form.users_verificationCode.toUpperCase == this.login_Form.verificationCode.toUpperCase) {
+            //     const res=await this.$http.post('/api/login',{uid:this.login_Form.loginPhone,pwd:this.login_Form.loginPwd})
+            //     console.log(res)
+            //     if(this.login_Form.loginPhone=="18072210399"){
+            //         window.sessionStorage.setItem('token',this.login_Form.loginPhone)
+            //         this.$router.push("/home")
+            //         this.$message.success('登录成功');
+            //     }
+            // }
+            // else {
+            //     this.change_Verification_Code();
+            //     return this.$message.error('验证码不正确');
+            // }
+
+            window.sessionStorage.setItem('token', this.login_Form.loginPhone)
+            // 将获取到的请求放在共公区域
+            this.$store.dispatch('asyncupdateLoginInfo',this.loginInFo)
+            this.$router.push("/home");
+            this.$message.success('登录成功');
         },
         //判断忘记密码验证码
         JudgmentPwdVerificationCode() {

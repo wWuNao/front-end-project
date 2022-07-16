@@ -17,7 +17,7 @@ Vue.use(Input)
 import { TabPane,Tabs,Container,Header,Main,Footer,Aside,
     Step,Steps,Link,Checkbox,CheckboxGroup,Table,TableColumn,Select,Option,
     RadioGroup,RadioButton,Menu,Submenu,MenuItemGroup,MenuItem,Dropdown,DropdownItem,
-    DropdownMenu} from 'element-ui'
+    DropdownMenu,Breadcrumb,BreadcrumbItem,Card,Row,Col,Pagination,MessageBox} from 'element-ui'
 Vue.use(TabPane)
 Vue.use(Tabs)
 Vue.use(Container)
@@ -43,3 +43,10 @@ Vue.use(MenuItem)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Card)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Pagination)
+Vue.prototype.$confirm=MessageBox.confirm

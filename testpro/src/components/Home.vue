@@ -6,7 +6,7 @@
                 <!-- 系统名称 -->
                 <div class="sysNameBox">
                     <span>温理练习系统</span>
-                    <span style="font-size: 4px ;margin-left:10px;">教师端</span>
+                    <span style="font-size: 4px ;margin-left:10px;">{{ systemEnd[list.info.end] }}</span>
                 </div>
                 <!-- 用户头像+用户名+退出+有公告提示图标 -->
                 <div class="userInfoBox">
@@ -17,33 +17,30 @@
                             二哈<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item ><span  @click="loginOut">退出</span></el-dropdown-item>
+                            <el-dropdown-item><span @click="loginOut">退出</span></el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                    
+
                 </div>
             </el-header>
             <el-container>
                 <!-- 侧边栏 -->
                 <el-aside width="201px">
-                    <el-menu>
-                        <el-submenu :index="item.id" v-for="(item) in list.data">
+                    <el-menu :router="true" :default-active="chooseTabObj">
+                        <el-menu-item :index="subItem.linkUrl" v-for="(subItem) in list.route" @click="changechooseTabObj(subItem.linkUrl)">
                             <template slot="title">
                                 <i class="el-icon-location"></i>
-                                <span slot="title">{{ item.name }}</span>
+                                <span slot="title">{{ subItem.menuName }}</span>
                             </template>
-                            <el-menu-item :index="subItem.children_id" v-for="(subItem) in item.children">
-                                <template slot="title">
-                                    <i class="el-icon-location"></i>
-                                    <span slot="title">{{ subItem.children_name }}</span>
-                                </template>
-                            </el-menu-item>
-                        </el-submenu>
+                        </el-menu-item>
                     </el-menu>
+                    <!-- <el-button type="info" @click="playinfo">mihao</el-button> -->
                 </el-aside>
                 <el-container>
                     <!-- 主体区 -->
-                    <el-main>Main</el-main>
+                    <el-main>
+                        <router-view></router-view>
+                    </el-main>
                     <!-- 页脚区 -->
                     <el-footer>Footer</el-footer>
                 </el-container>
@@ -55,55 +52,23 @@
 
 
 <script>
+import store from '@/store'
+
 export default {
     data() {
         return {
-            // 用户头像点击处的选项
-            
+            // 存放当前那个菜单项被选中
+            chooseTabObj:'/home',
+            // 存放是什么端（学生/后台）
+            systemEnd: {
+                'A': "学生端",
+                'B': '教师端'
+            },
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // 请将真数据放在此线之上，不然最后被删除请不要怪在下，同时请在测试结束后将使用该方法的对象元素删除或者注释，或者让对方不能调用此方法
             // 假数据
-            list: {
-                data: [{
-                    id:'1',
-                    name: "主页",
-                    children: "",
-                },
-                {
-                    id:"2",
-                    name: "题库管理",
-                    children: [{ children_id:'2_1',children_name: "题库编辑", children: "" }],
-                },
-                {
-                    id:"3",
-                    name: "任务管理",
-                    children: [{ children_id:'3_1',children_name: "练习管理", children: "" }, { children_id:'3_2',children_name: "考试管理", children: "" }],
-                },
-                {
-                    id:"4",
-                    name: "学生组管理",
-                    children: "",
-                },
-                {
-                    id:"5",
-                    name: "教师组管理",
-                    children: "",
-                },
-                {
-                    id:"6",
-                    name: "班级管理",
-                    children: "",
-                },
-                {
-                    id:"7",
-                    name: "用户管理",
-                    children: [{ children_id:'7_1',children_name: "管理员", children: "" }, { children_id:'7_2',children_name: "教师", children: "" }, { children_id:'7_3',children_name: "学生", children: "" }],
-                },
-                {
-                    id:"8",
-                    name: "个人中心",
-                    children: [{ children_id:'8_1',children_name: "个人信息", children: "" }, { children_id:'8_2',children_name: "修改密码", children: "" },],
-                },
-                ]
-            }
+            list: store.getters.getMenuBarContents.data
         }
     },
     methods: {
@@ -111,6 +76,19 @@ export default {
             console.log('nihao1')
             window.sessionStorage.clear()
             this.$router.push('/')
+        },
+        changechooseTabObj(link){
+            this.chooseTabObj=link;
+        },
+
+
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // 请将实际有用的方法放在此线之上，不然最后被删除请不要怪在下
+            // 测试方法
+        playinfo() {
+            console.log(this.list)
         }
     }
 }
@@ -118,9 +96,10 @@ export default {
 
 
 <style scoped>
+/* 头部区域 */
 .el-header {
-    background-color: #B3C0D1;
-    color: #333;
+    background-color: #41769B;
+    color: #fff;
     text-align: center;
     line-height: 60px;
     display: flex;
@@ -145,7 +124,7 @@ export default {
 
 
 
-
+/* 脚部区域 */
 .el-footer {
     background-color: #B3C0D1;
     color: #333;
@@ -155,27 +134,49 @@ export default {
 
 
 
-
+/* 侧边栏区域 */
 .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
+    background-color: #263238;
+    /* color: #333; */
     text-align: center;
     line-height: 200px;
     height: 745px;
 }
 
 .el-aside .el-menu {
+    background-color: #263238;
     width: 200px;
     min-height: 400px;
+}
+.el-aside .el-menu span {
+    color: #fff;
+    
+}
+.el-aside .el-menu .el-menu-item{
+    display: flex;
+}
+.el-aside .el-menu .el-menu-item i{
+    display: flex;
+    align-items:center;
+}
+.el-aside .el-menu .el-menu-item:hover{
+    background-color: #44b4ec;
+}
+.el-menu:hover {
+    background-color: #263238;
+}
+.el-dropdown-link {
+    color: #fff;
+}
+.el-aside.is-active {
+    background-color: #E6F7FF;
 }
 
 
 
 
 
-
-
-
+/* 主题区域 */
 .el-main {
     background-color: #E9EEF3;
     color: #333;
@@ -183,6 +184,10 @@ export default {
     line-height: 160px;
 }
 
+
+
+
+/* 除头部区域的所有区域 */
 body>.el-container {
     margin-bottom: 40px;
 }

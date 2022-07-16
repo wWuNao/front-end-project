@@ -28,12 +28,12 @@
                 <p style="margin-top: 60px;">配置超级管理员(SuperAdmin)的用户信息。<br>
                     <el-link type="primary" style=" font-size: 15px; ">什么是超级管理员?</el-link>
                 </p>
-                <el-form :model="pagetwo.first_Step_Form">
+                <el-form :model="initObj">
                     <el-form-item label="超级管理员用户名(我们推荐您使用root作为超级管理员的用户名)">
-                        <el-input style="border-radius: 20px;" v-model="pagetwo.first_Step_Form.admin_name"></el-input>
+                        <el-input style="border-radius: 20px;" v-model="initObj.uid"></el-input>
                     </el-form-item>
                     <el-form-item label="密码">
-                        <el-input style="border-radius: 20px;" v-model="pagetwo.first_Step_Form.admin_pwd"></el-input>
+                        <el-input style="border-radius: 20px;" v-model="initObj.pwd"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -48,14 +48,14 @@
 
                 <div style="display:flex;">
                     <el-link class="link_Config" @click="next_Operating_Steps(2)">
-                        <div class="Configuration">
+                        <div class="Configuration" @click="initCOnfig">
                             <h1 style="margin-left:50px;">推荐配置</h1>
                             <p style="margin-left:50px;">
                                 使用系统预分配好访问权限的学生角色，教师角色，管理员角色。
                             </p>
                         </div>
                     </el-link>
-                    <el-link @click="next_Operating_Steps(1)" >
+                    <el-link @click="next_Operating_Steps(1)">
                         <div class="Configuration" style="margin-left: 200px;">
                             <h1 style="margin-left:50px;">自定义配置</h1>
                             <p style="margin-left:50px;">
@@ -71,20 +71,28 @@
             <div id="page_Two_main" v-if="pagetwo.active === 2">
                 <h2>第三步</h2>
                 <p style="margin-top: 60px;">管理系统默认角色的权限</p>
-                <!-- 表单 -->
-                <div style="width:300px;">
-                    <el-form :model="pagetwo.third_step_Form">
-                        <el-form-item>
-                            <div v-for="(num,index) in pagetwo.COnfig.roles" style="display: flex;align-items: center;width: 800px;margin-top: 0px;">
-                                <h4>{{num.role[0]}}</h4>
-                                <div  class="COnfigBox" >
-                                    <el-checkbox-group v-model="pagetwo.third_step_Form.COnfig[index].COnfig" v-for="index1 in num.Config">
-                                        <el-checkbox v-bind:label="index1" name='pagetwo.third_step_Form.stuType' class="config_Cheeck"></el-checkbox>
-                                    </el-checkbox-group>
-                                </div>
-                            </div>
-                        </el-form-item>
-                    </el-form>
+                <!-- 权限选择表格 -->
+                <div style="width:1000px;display: flex;">
+                    <Table style="margin-top: 40px;text-align: center;" cellspacing="20">
+                        <thead>
+                            <!-- 权限 -->
+                            <tr>
+                                <th v-for="itemConfig in pagetwo.step_third_table.ConfigTab">{{ itemConfig }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="i in 3">
+                                <!-- 角色 -->
+                                <td style="font-size: 10px;">{{pagetwo.step_third_table.roles[i-1]}}</td>
+                                <!-- 角色选择权限 -->
+                                <!-- name:学生 value:学生_主页-->
+                                <td v-for="j in pagetwo.step_third_table.ConfigTab.length - 1"><input :name="pagetwo.step_third_table.roles[i-1]"
+                                        type="checkbox" :value="pagetwo.step_third_table.roles[i-1] + '_' + pagetwo.step_third_table.ConfigTab[j]"
+                                         :checked="initObj.roleConfigs[i-1].roleMenuRels[j-1]"/></td>
+                            </tr>
+
+                        </tbody>
+                    </Table>
                 </div>
             </div>
 
@@ -94,22 +102,28 @@
                 <h2>第四步</h2>
                 <p style="margin-top: 60px;">您已完成了所有的配置工作，现在，请您校验所有的配置信息。<br>
                     确保配置信息的准确无误后，点击右下角完成按钮，即可开始使用本系统！</p>
-                <span style="color:#bee3fc ;">超级管理员用户名:{{ pagetwo.first_Step_Form.admin_name }}密码:{{
-                        pagetwo.first_Step_Form.admin_pwd
-                }}</span>
-                <div style="width:300px;">
-                    <el-form :model="pagetwo.third_step_Form">
-                        <el-form-item>
-                            <div v-for="(num,index) in pagetwo.COnfig.roles" style="display: flex;align-items: center;width: 800px;margin-top: 0px;">
-                                <h4>{{num.role[0]}}</h4>
-                                <div  class="COnfigBox" >
-                                    <el-checkbox-group v-model="pagetwo.third_step_Form.COnfig[index].COnfig" v-for="index1 in num.Config">
-                                        <el-checkbox v-bind:label="index1" name='pagetwo.third_step_Form.stuType' class="config_Cheeck" disabled></el-checkbox>
-                                    </el-checkbox-group>
-                                </div>
-                            </div>
-                        </el-form-item>
-                    </el-form>
+                <span style="color:#2ca9fc ;">超级管理员用户名:{{ initObj.uid }}&nbsp&nbsp&nbsp&nbsp密码:{{initObj.pwd}}</span>
+                 <div style="width:1000px;display: flex;">
+                    <Table style="margin-top: 40px;text-align: center;" cellspacing="20">
+                        <thead>
+                            <!-- 权限 -->
+                            <tr>
+                                <th v-for="itemConfig in pagetwo.step_third_table.ConfigTab">{{ itemConfig }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="i in 3">
+                                <!-- 角色 -->
+                                <td style="font-size: 10px;">{{pagetwo.step_third_table.roles[i-1]}}</td>
+                                <!-- 角色选择权限 -->
+                                <!-- name:学生 value:学生_主页-->
+                                <td v-for="j in pagetwo.step_third_table.ConfigTab.length - 1"><input :name="pagetwo.step_third_table.roles[i-1]"
+                                        type="checkbox" :value="pagetwo.step_third_table.roles[i-1] + '_' + pagetwo.step_third_table.ConfigTab[j]"
+                                         :checked="initObj.roleConfigs[i-1].roleMenuRels[j-1]" disabled="disabled"/></td>
+                            </tr>
+
+                        </tbody>
+                    </Table>
                 </div>
             </div>
 
@@ -130,30 +144,33 @@
 
 
 <script>
+
+
+
+
+
 export default {
     data() {
         return {
-            page_index: 0,//记录第几页
+            page_index: 1,//记录第几页
 
             // 第二页属性
             pagetwo: {
+                // 记录第几步骤   由零开始
                 active: 0,
-                first_Step_Form: {
-                    admin_name: "root",
-                    admin_pwd: "password",
-                },
-                COnfig: {
-                    roles:[
-                        {role:['学生','stuType'],Config: ['考试', '练习', '修改学生信息']},
-                        {role:['教师','teaType'],Config: ['发布考试/练习', '创建学生组', '创建教师组','修改信息']},
-                        {role:['管理','adminType'],Config: ['删除教师组', '删除学生组', '创建班级','修改信息']}
-                    ]
-                },
-                third_step_Form: {
-                    COnfig: [{COnfig:[]},{COnfig:[]},{COnfig:[]}],
+                step_third_table: {
+                    roles: ['学生', '教师', '管理员'],
+                    ConfigTab: ["", '主页', '个人中心', '我的任务', '题库管理', '任务管理', '学生组管理', '教师组管理', '班级管理', '用户管理', '角色管理',],
                 },
 
 
+            },
+            initObj: {
+                "uid": "root",
+                "pwd": "123456",
+                // "roleConfigs": [{ "roleName": "学生", "roleMenuRels": [true, true, true, false, false, false, false, false, false, false] }, { "roleName": "教师", "roleMenuRels": [true, true, false, true, true, true, true, false, false, false] }, { "roleName": "管理员", "roleMenuRels": [true, true, false, true, true, true, true, true, true, true] }
+                // ]
+                "roleConfigs": [{ "roleName": "学生", "roleMenuRels": [] }, { "roleName": "教师", "roleMenuRels": [] }, { "roleName": "管理员", "roleMenuRels": [] }]
             },
             rules: {
 
@@ -167,12 +184,43 @@ export default {
         },
         // 上/下一个步骤
         next_Operating_Steps(num) {
-            this.pagetwo.active = this.pagetwo.active + num
+            if(this.pagetwo.active!=2){
+                this.pagetwo.active = this.pagetwo.active + num
+            }
+            else if(this.pagetwo.active==2){
+                this.pagetwo.active = this.pagetwo.active + num
+                this.getCheckBox()
+            }
+            
         },
-        gotoHome(){
-            // this.$http.post()
+        // 初始化内容提交后端
+        async gotoHome() {
+            const res = await this.$http.post('/api/init/submit', { uid: this.initObj.uid, pwd: this.initObj.pwd, roleConfigs: this.initObj.roleConfigs })
+            // todo:通过返回数据设置弹框是否登录成功，和是否跳转页面
             this.$router.push('/home')
         },
+        // 获取用户权限选择情况
+        getCheckBox() {
+            var COnfig = {}
+            // 获取所有复选框元素
+            for (var i = 0; i < this.pagetwo.step_third_table.roles.length; i++) {
+                // COnfig元素：学生Config
+                COnfig[this.pagetwo.step_third_table.roles[i] + 'Config'] = document.getElementsByName(this.pagetwo.step_third_table.roles[i])
+            }
+            // 获取不同角色的权限选择情况
+            for (var i = 0; i < this.pagetwo.step_third_table.roles.length; i++) {
+                this.initObj.roleConfigs[i]['roleMenuRels']=[];
+                for (var j = 0; j < 10; j++) {
+                    this.initObj.roleConfigs[i]['roleMenuRels'].push(COnfig[this.pagetwo.step_third_table.roles[i] + 'Config'][j].checked)
+                }
+            }
+            // console.log(COnfig)
+            // console.log(this.initObj)
+        },
+        // 初始化配置
+        initCOnfig(){
+            this.initObj.roleConfigs=[{ "roleName": "学生", "roleMenuRels": [true, true, true, false, false, false, false, false, false, false] }, { "roleName": "教师", "roleMenuRels": [true, true, false, true, true, true, true, false, false, false] }, { "roleName": "管理员", "roleMenuRels": [true, true, false, true, true, true, true, true, true, true] }]
+        }
     },
 
 }
@@ -242,7 +290,8 @@ export default {
     border-radius: 20px;
     margin-top: 80px;
 }
-#page_Two .COnfigBox{
+
+#page_Two .COnfigBox {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -250,8 +299,10 @@ export default {
     width: 200px;
     margin-left: 500px;
 }
-#page_Two .COnfigBox .config_Cheeck{
+
+#page_Two .COnfigBox .config_Cheeck {
     margin-left: 10px;
+
 }
 </style>
 
