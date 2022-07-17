@@ -1,9 +1,9 @@
 <template>
-  <div id="app" class="studentGroupBox">
+  <div id="app" class="teacherGroupBox">
     <!--面包屑-->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/home' }">主页</el-breadcrumb-item>
-      <el-breadcrumb-item>学生组</el-breadcrumb-item>
+      <el-breadcrumb-item>班级</el-breadcrumb-item>
     </el-breadcrumb>
 
 
@@ -12,16 +12,15 @@
       <!--搜索-->
       <el-row :gutter="20">
         <el-col :span="5">
-          <el-input placeholder="学生组名称">
+          <el-input placeholder="班级名称">
             <!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
           </el-input>
         </el-col>
         <el-col :span="4">
           <el-button type="primary">搜索</el-button>
         </el-col>
-        
-        <el-button size='mini' style='position: absolute;right:90px;top:5px;'>删除</el-button>
-        <el-button size='mini' style='position: absolute;right:170px;top:5px;' @click="addGroupPanelFlag = true">创建</el-button>
+        <el-button size='mini' style='position: absolute;right:20px;top:5px;'>删除</el-button>
+        <el-button size='mini' style='position: absolute;right:90px;top:5px;' @click="addGroupPanelFlag = true">+创建</el-button>
       </el-row>
 
       <!--表格-->
@@ -30,7 +29,7 @@
         </el-table-column>
         <el-table-column prop="id" style="border-left: 0px;" width="30px">
         </el-table-column>
-        <el-table-column prop="name" label="学生组名" width="180">
+        <el-table-column prop="name" label="班级名" width="180">
         </el-table-column>
         <el-table-column prop="sum" label="人数">
         </el-table-column>
@@ -48,12 +47,11 @@
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
         :page-sizes="[1, 2, 5, 10]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="4">
       </el-pagination>
-
     </el-card>
     <!-- 添加用户 -->
-    <el-dialog title="学生组创建" :visible.sync="addGroupPanelFlag" style="line-height: 30px;" width="50%">
+    <el-dialog title="班级创建" :visible.sync="addGroupPanelFlag" style="line-height: 30px;" width="50%">
       <el-form :model="addGroupInfoForm" class="teacherForm" style="margin-top: 30px;" :rules="addGroupInfoFormRules">
-        <el-form-item label="学生组名" style="display: flex;margin-left: 50px;" prop="GroupName">
+        <el-form-item label="班级名" style="display: flex;margin-left: 50px;" prop="GroupName">
           <el-input autocomplete="off" style="margin-left: 10px;" v-model="addGroupInfoForm.GroupName"></el-input>
         </el-form-item>
         <el-form-item label="学生列表" style="display: flex;margin-left: 50px;">
@@ -63,10 +61,11 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addGroupPanelFlag = false">取 消</el-button>
+        <el-button @click="addGroupPanelFlag=false">取 消</el-button>
         <el-button type="primary" @click="setValue">确 定</el-button>
       </div>
     </el-dialog>
+
 
   </div>
 </template>
@@ -79,12 +78,18 @@ export default {
         GroupName: "",
       },
       addGroupInfoFormRules: {
-        GroupName: [{ required: true, message: '请输入学生组名称', trigger: 'blur' },]
+        GroupName: [{ required: true, message: '请输入班级组名称', trigger: 'blur' },]
       },
 
-            // 假数据
+
+
+      // 假数据
       data: this.generateData(),
       value: [1, 4],
+
+
+
+
       tableData: [{
         id: '1',
         name: 'ddd',
@@ -136,13 +141,13 @@ export default {
       }
       return data;
     },
-    async setValue() {
+    async setValue(){
       // const res=await this.$http.post('ip地址',this.value)
-      this.addGroupPanelFlag = false
+       this.addGroupPanelFlag=false
     }
   }
 }
-</script>
+</script >
  <!--样式-->
 <style scoped>
 .el-breadcrumb {
@@ -153,7 +158,9 @@ export default {
 .el-card {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
 }
-
+.el-transfer-panel{
+  width: 250px    !important;
+}
 .el-card .el-row {
   height: 50px;
   display: flex;
@@ -164,20 +171,38 @@ export default {
   margin-top: 15px;
   font-size: 12px;
 }
-
-.el-dialog__header {
-  height: 30px;
-  line-height: 30px
-}
-
-.el-dialog__header {
-  height: 30px;
-  line-height: 30px
-}
 </style>
-
 <style scoped>
-.studentGroupBox .el-table tr {
+.teacherGroupBox .el-table tr {
   line-height: 40px;
+}
+
+.el-dialog__header .el-dialog__title {
+  position: absolute;
+  left: 30px;
+}
+
+.el-form-item .el-input .el-input__inner{
+  width: 500px;
+}
+.el-checkbox .el-transfer-panel__item{
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+.el-transfer-panel__item.el-checkbox__input{
+  position: absolute;
+  top: 8px;
+  left: 0px;
+}
+.el-transfer-panel__item.el-checkbox__label{
+  position: absolute;
+  top:8px;
+}
+
+.el-transfer__buttons{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

@@ -5,13 +5,17 @@ import HomeView from '@/components/Home'
 import initialPageView from '@/components/initialPage'
 import teacherGroupView from '@/components/teacherGroup'
 import studentGroupView from '@/components/studentGroup'
+import userView from '@/components/user'
+import mainView from '@/components/main'
+import classView from '@/components/class'
+import userManageView from '@/components/userManage'
 Vue.use(VueRouter)
 
 const routes = [
   {path:'/',redirect:"/login"},
   {path:'/login',component:loginView},
-  {path:'/home',component:HomeView,redirect:'/tch_grp_manage',children:[{path:'/tch_grp_manage',component:teacherGroupView},
-  {path:'/stu_grp_manage',component:studentGroupView}]},
+  {path:'/home',component:HomeView,redirect:'/home',children:[{path:'/home',component:mainView},{path:'/tch_grp_manage',component:teacherGroupView},
+  {path:'/stu_grp_manage',component:studentGroupView},{path:'/my',component:userView},{path:'/class_manage',component:classView},{path:'/user_manage',component:userManageView}]},
   {path:'/init',component:initialPageView},
 ]
 

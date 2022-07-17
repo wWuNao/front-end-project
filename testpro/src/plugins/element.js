@@ -17,7 +17,8 @@ Vue.use(Input)
 import { TabPane,Tabs,Container,Header,Main,Footer,Aside,
     Step,Steps,Link,Checkbox,CheckboxGroup,Table,TableColumn,Select,Option,
     RadioGroup,RadioButton,Menu,Submenu,MenuItemGroup,MenuItem,Dropdown,DropdownItem,
-    DropdownMenu,Breadcrumb,BreadcrumbItem,Card,Row,Col,Pagination,MessageBox} from 'element-ui'
+    DropdownMenu,Breadcrumb,BreadcrumbItem,Card,Row,Col,Pagination,MessageBox,
+    Dialog,Transfer,Radio} from 'element-ui'
 Vue.use(TabPane)
 Vue.use(Tabs)
 Vue.use(Container)
@@ -50,3 +51,6 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Pagination)
 Vue.prototype.$confirm=MessageBox.confirm
+Vue.use(Dialog)
+Vue.use(Transfer)
+Vue.use(Radio)

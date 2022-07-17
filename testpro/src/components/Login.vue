@@ -17,7 +17,7 @@
                 :model="login_Form" ref="loginFormRef">
                 <!-- 手机号 -->
                 <el-form-item prop="loginPhone">
-                    <el-input placeholder="请输入手机号" class="user_input" v-model="login_Form.loginPhone"></el-input>
+                    <el-input placeholder="请输入用户名" class="user_input" v-model="login_Form.loginPhone"></el-input>
                 </el-form-item>
                 <!-- 密码 -->
                 <el-form-item prop="loginPwd">
@@ -104,13 +104,13 @@ export default {
                 verificationCode: "",//验证码
                 verificationCodeImgSrc: "",//验证码图片地址
                 QrcodeImgsrc: "",//二维码图片地址
-                loginPhone: "18072210399",
-                loginPwd: "123456",
+                loginPhone: "",
+                loginPwd: "",
             },
             loginFormRules: {
                 loginPhone: [
-                    { required: true, message: '请输入手机号', trigger: 'blur' },
-                    { max: 11, message: '手机号长度不大于11位', trigger: 'blur' }
+                    { required: true, message: '请输入用户名', trigger: 'blur' },
+                    { max: 11, message: '用户名长度不大于11位', trigger: 'blur' }
                 ],
                 loginPwd: [{ required: true, message: '请输入密码', trigger: 'blur' },]
             },
@@ -131,7 +131,7 @@ export default {
                 "code": "10000",
                 "msg": "success",
                 "data": {
-                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbmQiOiJCIiwiZXhwIjoxNjU4NTcxODgzLCJ1c2VyaWQiOiIzNDYzNzU1OTYwMDkzMjQ1NDQifQ.DlhRs7EtkplpitUyouHu0GyVmQiwcivVkEgfH1CAHdw",
+                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbmQiOiJCIiwiZXhwIjoxNjU4NTYzNzk1LCJ1c2VyaWQiOiIzNDYzNzU1OTYwMDkzMjQ1NDQifQ.PGMokzUpXfTchUL6DQ1QMYXy7HyK9rYE18te1wTMAT0",
                     "info": {
                         "realName": "SuperAdmin",
                         "roles": [
@@ -157,103 +157,76 @@ export default {
                             "menuName": "主页",
                             "iconUrl": "home",
                             "parentMenuId": "0",
-                            "linkUrl": "/home"
+                            "linkUrl": "/home",
+                         
                         },
                         {
                             "id": "2",
                             "menuName": "个人中心",
                             "iconUrl": "my",
                             "parentMenuId": "0",
-                            "linkUrl": "/my"
+                            "linkUrl": "/my",
+                        
                         },
                         {
                             "id": "4",
                             "menuName": "题库管理",
                             "iconUrl": "lib_manage",
                             "parentMenuId": "0",
-                            "linkUrl": "/lib_manage"
+                            "linkUrl": "/lib_manage",
+                            
                         },
                         {
                             "id": "5",
-
                             "menuName": "任务管理",
-
                             "iconUrl": "mission_manage",
-
                             "parentMenuId": "0",
-
-                            "linkUrl": "/mission_manage"
-
+                            "linkUrl": "/mission_manage",
+                          
                         },
 
                         {
-
                             "id": "6",
-
                             "menuName": "学生组管理",
-
                             "iconUrl": "stu_grp_manage",
-
                             "parentMenuId": "0",
-
-                            "linkUrl": "/stu_grp_manage"
-
+                            "linkUrl": "/stu_grp_manage",
+                          
                         },
 
                         {
-
                             "id": "7",
-
                             "menuName": "教师组管理",
-
                             "iconUrl": "tch_grp_manage",
-
                             "parentMenuId": "0",
-
-                            "linkUrl": "/tch_grp_manage"
-
+                            "linkUrl": "/tch_grp_manage",
+                          
                         },
 
                         {
-
                             "id": "8",
-
                             "menuName": "班级管理",
-
                             "iconUrl": "class_manage",
-
                             "parentMenuId": "0",
-
-                            "linkUrl": "/class_manage"
-
+                            "linkUrl": "/class_manage",
+                      
                         },
 
                         {
-
                             "id": "9",
-
                             "menuName": "用户管理",
-
                             "iconUrl": "user_manage",
-
                             "parentMenuId": "0",
-
-                            "linkUrl": "/user_manage"
-
+                            "linkUrl": "/user_manage",
+                 
                         },
 
                         {
-
                             "id": "10",
-
                             "menuName": "角色管理",
-
                             "iconUrl": "role_manage",
-
                             "parentMenuId": "0",
-
                             "linkUrl": "/role_manage"
-
                         }
 
                     ]
@@ -290,25 +263,27 @@ export default {
         },
         // 判断登录验证码和登录请求发起
         async JudgmentVerificationCode() {
-            // if (this.login_Form.users_verificationCode.toUpperCase == this.login_Form.verificationCode.toUpperCase) {
-            //     const res=await this.$http.post('/api/login',{uid:this.login_Form.loginPhone,pwd:this.login_Form.loginPwd})
-            //     console.log(res)
-            //     if(this.login_Form.loginPhone=="18072210399"){
-            //         window.sessionStorage.setItem('token',this.login_Form.loginPhone)
-            //         this.$router.push("/home")
-            //         this.$message.success('登录成功');
-            //     }
-            // }
-            // else {
-            //     this.change_Verification_Code();
-            //     return this.$message.error('验证码不正确');
-            // }
+            if (this.login_Form.users_verificationCode.toUpperCase == this.login_Form.verificationCode.toUpperCase) {
+                const res=await this.$http.post('/api/login',{uid:this.login_Form.loginPhone,pwd:this.login_Form.loginPwd})
+                console.log(res)
+                if(res.status==200){
+                    // window.sessionStorage.setItem('token',res.statusText)
+                    window.sessionStorage.setItem('token',this.loginInFo.data.token)
+                    this.$store.dispatch('asyncupdateLoginInfo',this.loginInFo)
+                    this.$router.push("/home")
+                    this.$message.success('登录成功');
+                }
+            }
+            else {
+                this.change_Verification_Code();
+                return this.$message.error('验证码不正确');
+            }
 
-            window.sessionStorage.setItem('token', this.login_Form.loginPhone)
+            // window.sessionStorage.setItem('token', this.login_Form.loginPhone)
             // 将获取到的请求放在共公区域
-            this.$store.dispatch('asyncupdateLoginInfo',this.loginInFo)
-            this.$router.push("/home");
-            this.$message.success('登录成功');
+            // this.$store.dispatch('asyncupdateLoginInfo',this.loginInFo)
+            // this.$router.push("/home");
+            // this.$message.success('登录成功');
         },
         //判断忘记密码验证码
         JudgmentPwdVerificationCode() {
