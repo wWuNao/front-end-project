@@ -28,8 +28,8 @@
                 <el-form-item>
                     <div id="verification-Code">
                         <el-input placeholder="请输入验证码" class="user_input verification_Code"
-                            v-model="login_Form.users_verificationCode"></el-input>
-                        <img :src="login_Form.verificationCodeImgSrc" alt="获取失败" @click="change_Verification_Code">
+                            v-model="login_Form_min.users_verificationCode"></el-input>
+                        <img :src="login_Form_min.verificationCodeImgSrc" alt="获取失败" @click="change_Verification_Code">
                     </div>
                 </el-form-item>
                 <!-- 按钮区 -->
@@ -42,7 +42,7 @@
             </el-form>
             <!-- 微信扫码登录界面 -->
             <div v-if="chooseNum === 2" class="wechatBox">
-                <img :src="login_Form.QrcodeImgsrc" alt="" @click="change_Qr_Code">
+                <img :src="login_Form_min.QrcodeImgsrc" alt="" @click="change_Qr_Code">
             </div>
             <!-- 忘记密码区域 -->
             <div class="pwdBox" v-if="tabNum === 2" style="display: flex;flex-direction: column;align-items: center;">
@@ -99,14 +99,19 @@ export default {
             tabNum: 1,//展示页面 1.登录，2.忘记密码
             chooseNum: 1,//选择登录方式 1.手机,2.微信
 
+            
             login_Form: {
+                "loginPhone": "",
+                "loginPwd": "",
+            },
+            login_Form_min: {
                 users_verificationCode: "",
                 verificationCode: "",//验证码
                 verificationCodeImgSrc: "",//验证码图片地址
                 QrcodeImgsrc: "",//二维码图片地址
-                loginPhone: "",
-                loginPwd: "",
             },
+
+            
             loginFormRules: {
                 loginPhone: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -250,37 +255,50 @@ export default {
         // 获取验证码
         change_Verification_Code() {
             this.$http.post("https://www.mxnzp.com/api/verifycode/code?len=5&type=0&app_id=unelukhohlqjrrip&app_secret=WmdRVmtJVDRXZ1EweFJ3bENOS1Qrdz09").then(res => {
-                this.login_Form.verificationCodeImgSrc = res.data.data.verifyCodeImgUrl;
-                this.login_Form.verificationCode = res.data.data.verifyCode
+                this.login_Form_min.verificationCodeImgSrc = res.data.data.verifyCodeImgUrl;
+                this.login_Form_min.verificationCode = res.data.data.verifyCode
                 // console.log(res)
             });
         },
         // 获取二维码
         change_Qr_Code() {
             this.$http.get("https://www.mxnzp.com/api/qrcode/create/single?content=你好&size=500&type=0&app_id=unelukhohlqjrrip&app_secret=WmdRVmtJVDRXZ1EweFJ3bENOS1Qrdz09").then(res => {
-                this.login_Form.QrcodeImgsrc = res.data.data.qrCodeUrl;
+                this.login_Form_min.QrcodeImgsrc = res.data.data.qrCodeUrl;
             });
         },
         // 判断登录验证码和登录请求发起
         async JudgmentVerificationCode() {
-            if (this.login_Form.users_verificationCode.toUpperCase == this.login_Form.verificationCode.toUpperCase) {
-                const res=await this.$http.post('/api/login',{uid:this.login_Form.loginPhone,pwd:this.login_Form.loginPwd})
+        //     console.log(this.login_Form.users_verificationCode.toUpperCase())
+        //     console.log(this.login_Form.verificationCode.toUpperCase())
+        
+            if (this.login_Form_min.users_verificationCode.toUpperCase() == this.login_Form_min.verificationCode.toUpperCase()) {
+                console.log(this.login_Form)
+                // const res=await this.$http.post('/api/login',{params:{uid:this.login_Form.loginPhone,pwd:this.login_Form.loginPwd}})
+                const res=await this.$http({
+                    url:'/api/login',
+                    method:'post',
+                    data:"",
+                    params:{uid:this.login_Form.loginPhone,pwd:this.login_Form.loginPwd},
+                })
                 console.log(res)
                 if(res.status==200){
-                    // window.sessionStorage.setItem('token',res.statusText)
-                    window.sessionStorage.setItem('token',this.loginInFo.data.token)
-                    this.$store.dispatch('asyncupdateLoginInfo',this.loginInFo)
+                    window.sessionStorage.setItem('token',res.data.data.token)
+                    this.$store.dispatch('asyncupdateLoginInfo',res.data.data)
                     this.$router.push("/home")
                     this.$message.success('登录成功');
+                }
+                else{
+                    this.$message.warning('用户名或密码错误');
                 }
             }
             else {
                 this.change_Verification_Code();
-                return this.$message.error('验证码不正确');
+                this.$message.error('验证码不正确');
+                this.login_Form_min.users_verificationCode=""
             }
 
             // window.sessionStorage.setItem('token', this.login_Form.loginPhone)
-            // 将获取到的请求放在共公区域
+            // // 将获取到的请求放在共公区域
             // this.$store.dispatch('asyncupdateLoginInfo',this.loginInFo)
             // this.$router.push("/home");
             // this.$message.success('登录成功');

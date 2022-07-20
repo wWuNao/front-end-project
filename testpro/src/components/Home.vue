@@ -6,7 +6,7 @@
                 <!-- 系统名称 -->
                 <div class="sysNameBox">
                     <span>温理练习系统</span>
-                    <span style="font-size: 4px ;margin-left:10px;">{{ systemEnd[list.info.end] }}</span>
+                    <span style="font-size: 4px ;margin-left:10px;">{{ systemEnd[loginuserInfo.end] }}</span>
                 </div>
                 <!-- 用户头像+用户名+退出+有公告提示图标 -->
                 <div class="userInfoBox">
@@ -27,7 +27,7 @@
                 <!-- 侧边栏 -->
                 <el-aside width="201px">
                     <el-menu :router="true" :default-active="chooseTabObj">
-                        <el-menu-item :index="subItem.linkUrl" v-for="(subItem) in list.route" @click="changechooseTabObj(subItem.linkUrl)">
+                        <el-menu-item :index="subItem.linkUrl" v-for="(subItem) in list" @click="changechooseTabObj(subItem.linkUrl)">
                             <template slot="title">
                                 <i class="el-icon-location"></i>
                                 <span slot="title">{{ subItem.menuName }}</span>
@@ -64,11 +64,14 @@ export default {
                 'A': "学生端",
                 'B': '教师端'
             },
-
+            // 登录者信息
+            loginuserInfo:store.getters.getMenuBarContents.info,
+            // 侧边栏内容列表
+            TabList:store.getters.getMenuBarContents.route,
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------
             // 请将真数据放在此线之上，不然最后被删除请不要怪在下，同时请在测试结束后将使用该方法的对象元素删除或者注释，或者让对方不能调用此方法
             // 假数据
-            list: store.getters.getMenuBarContents.data
+            list: store.getters.getMenuBarContents.route
         }
     },
     methods: {

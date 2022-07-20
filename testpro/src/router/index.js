@@ -9,13 +9,15 @@ import userView from '@/components/user'
 import mainView from '@/components/main'
 import classView from '@/components/class'
 import userManageView from '@/components/userManage'
+import roleView from '@/components/role'
 Vue.use(VueRouter)
 
 const routes = [
   {path:'/',redirect:"/login"},
   {path:'/login',component:loginView},
   {path:'/home',component:HomeView,redirect:'/home',children:[{path:'/home',component:mainView},{path:'/tch_grp_manage',component:teacherGroupView},
-  {path:'/stu_grp_manage',component:studentGroupView},{path:'/my',component:userView},{path:'/class_manage',component:classView},{path:'/user_manage',component:userManageView}]},
+  {path:'/stu_grp_manage',component:studentGroupView},{path:'/my',component:userView},{path:'/class_manage',component:classView},{path:'/user_manage',component:userManageView},
+  {path:'/role_manage',component:roleView}]},
   {path:'/init',component:initialPageView},
 ]
 
@@ -29,10 +31,11 @@ const router = new VueRouter({
 
 // 挂在路由导航守卫
 router.beforeEach((to, from, next) => {
-  if(to.path==='/init') return next();
-  if (to.path === '/login') return next();
   //获取token;
   const tokenStr = window.sessionStorage.getItem('token');
+  if(to.path==='/init') return next();
+  if (to.path === '/login'&& tokenStr) return next("/home");
+  if (to.path === '/login'&& !tokenStr) return next();
   if (!tokenStr) {
     return next('/login');
   }

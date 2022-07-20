@@ -4,7 +4,9 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 
-const state= null !=window.sessionStorage.getItem('state')?JSON.parse(window.sessionStorage.getItem('state')):{}
+const state= null !=window.sessionStorage.getItem('state')?JSON.parse(window.sessionStorage.getItem('state')):{
+  loginInfo:{}
+}
 export default new Vuex.Store({
   // 存储对象---共公state对象,存储所有组件的状态
   state,

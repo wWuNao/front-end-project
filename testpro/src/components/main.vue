@@ -29,6 +29,24 @@
 
 
 <script>
+// import request from '../assets/js/api'
+
+// export default{
+//     data() {
+//         return {
+            
+//         }
+//     },
+//     methods: {
+//         resTest(){
+//             request({
+//                 method:'post',
+//                 url:'/role/get_list',
+//                 params:{},
+//             })
+//         }
+//     },
+// }
 </script>
 
 
